@@ -9,4 +9,4 @@ an old example mapping between an american and german vehicle
 ![b2f](https://raw.github.com/stnava/cars/master/b2f_aff.jpg?raw=true)
 ![b2f2](https://raw.github.com/stnava/cars/master/b2f_diff.jpg?raw=true)
 
-run [cars.sh](https://github.com/stnava/C/blob/master/cars.sh) in this directory.
+run [cars.sh](https://github.com/stnava/cars/blob/master/cars.sh) in this directory.
