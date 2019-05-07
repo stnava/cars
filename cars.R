@@ -51,7 +51,7 @@ registrationSyN <- antsRegistration(
   typeofTransform = 'SyNOnly',
   synMetric = 'mattes',
   synSampling = 32,
-  gradStep = 2.0,
+  gradStep = 0.25,
   affIterations = c( 1500, 1500, 1500, 300, 100, 0 ),
   verbose = TRUE, printArgs = TRUE, outprefix = outputPrefix )
 
