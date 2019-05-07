@@ -27,7 +27,7 @@ antsRegistration -d $dim -r [b2f_0GenericAffine.mat] \
                         -f $down \
                        -u 1 -v 1 \
                        -o [b2f_,b2f_diff.nii.gz,b2f_diff_inv.nii.gz]
-MeasureImageSimilarity $dim 2 $f b2f_aff.nii.gz log.txt
-MeasureImageSimilarity $dim 2 $f b2f_diff.nii.gz log.txt
+MeasureImageSimilarity -d $dim -m CC[$f, b2f_aff.nii.gz, 1, 4] -v 1 > log.txt
+MeasureImageSimilarity -d $dim -m CC[$f, b2f_diff.nii.gz, 1, 4] -v 1 >> log.txt
 ConvertImagePixelType b2f_aff.nii.gz b2f_aff.jpg 1
 ConvertImagePixelType b2f_diff.nii.gz b2f_diff.jpg 1
