@@ -1,4 +1,5 @@
 library( ANTsR)
+layout( matrix(1:2,nrow=1))
 
 # Read in the images
 
@@ -9,9 +10,13 @@ movingImage <- antsImageRead( paste0( dataDirectory, 'beetle.jpg' ), dimension =
 
 fixedImageLM <- antsImageRead( paste0( dataDirectory, 'ford_landmarks.nii.gz' ), dimension = 2 )
 movingImageLM <- antsImageRead( paste0( dataDirectory, 'beetle_landmarks.nii.gz' ), dimension = 2 )
-
+fixedImageLM1 = thresholdImage( fixedImageLM, 1, 1 )
+movingImageLM1 = thresholdImage( movingImageLM, 1, 1 )
+fixedImageLM2 = thresholdImage( fixedImageLM, 2, 2 )
+movingImageLM2 = thresholdImage( movingImageLM, 2, 2 )
 # Plot the fixed  and moving images
 plot( fixedImage, movingImage, color.overlay = "jet", alpha = 0.7 )
+plot( movingImage, movingImageLM, color.overlay = "jet", alpha = 0.7 )
 
 #######
 #
@@ -55,21 +60,15 @@ registrationSyN <- antsRegistration(
   synMetric = 'mattes',
   synSampling = 32,
   gradStep = 0.25,
-  regIterations = c( 1500, 1500, 1500, 300, 100, 0 ),
+  regIterations = c( 1500, 1500, 50, 20, 10, 10, 10 ),
   verbose = TRUE, printArgs = TRUE, outprefix = outputPrefix,
-  multivariateExtras = list(list( "meansquares", fixedImageLM, movingImageLM, 1, 2 ) ), )
-
+  multivariateExtras = list(
+    list( "meansquares", fixedImageLM1, movingImageLM1, 1, 16 ),
+    list( "meansquares", fixedImageLM2, movingImageLM2, 1, 16 ) ) )
+txlm = antsApplyTransforms( fixedImageLM, movingImageLM, registrationSyN$fwdtransforms,
+  interpolator = 'nearestNeighbor' )
 # Plot the fixed and warped moving image
-layout( matrix(1:2,nrow=1))
+layout( matrix(1:3,nrow=1))
 plot( fixedImage, colorbar=FALSE )
 plot( registrationSyN$warpedmovout, colorbar=FALSE   )
-
-similarity <- imageSimilarity( fixedImage,
-  movingImage, "ANTSNeighborhoodCorrelation", radius = 4 )
-similarityAffine <- imageSimilarity( fixedImage,
-  registrationAffine$warpedmovout, "ANTSNeighborhoodCorrelation", radius = 4 )
-similaritySyN <- imageSimilarity( fixedImage,
-  registrationSyN$warpedmovout, "ANTSNeighborhoodCorrelation", radius = 4 )
-
-antsImageWrite( registrationSyN$warpedmovout, paste0( outputPrefix, "Warped.nii.gz" ) )
-antsImageWrite( registrationSyN$warpedfixout, paste0( outputPrefix, "InverseWarped.nii.gz" ) )
+plot( fixedImage, txlm, alpha=0.5, colorbar=FALSE, doCropping=FALSE )
