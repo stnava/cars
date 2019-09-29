@@ -57,10 +57,12 @@ registrationSyN <- antsRegistration(
   gradStep = 0.25,
   regIterations = c( 1500, 1500, 1500, 300, 100, 0 ),
   verbose = TRUE, printArgs = TRUE, outprefix = outputPrefix,
-  multivariateExtras = list(list( "meansquares", fixedImageLM, movingImageLM, 5, 2 ) ), )
+  multivariateExtras = list(list( "meansquares", fixedImageLM, movingImageLM, 1, 2 ) ), )
 
 # Plot the fixed and warped moving image
-plot( fixedImage, registrationSyN$warpedmovout, color.overlay = "jet", alpha = 0.4 )
+layout( matrix(1:2,nrow=1))
+plot( fixedImage, colorbar=FALSE )
+plot( registrationSyN$warpedmovout, colorbar=FALSE   )
 
 similarity <- imageSimilarity( fixedImage,
   movingImage, "ANTSNeighborhoodCorrelation", radius = 4 )
